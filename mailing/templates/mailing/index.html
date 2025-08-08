@@ -1,0 +1,7 @@
+{% extends 'mailing/base.html' %}
+ 
+{% block content %}<h2>Статистика</h2><ul>
+   <li>Всего рассылок: {{ total_mailings }}</li>
+   <li>Активных рассылок: {{ active_mailings }}</li>
+   <li>Уникальных получателей: {{ unique_recipients }}</li></ul>
+{% endblock %}

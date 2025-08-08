@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <title>Подтверждение удаления</title>
+</head>
+<body>
+    <h1>Удалить получателя "{{ recipient }}"?</h1>
+    <p>Вы уверены, что хотите удалить этого получателя?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Да, удалить</button>
+        <a href="{% url 'recipient_list' %}">Отмена</a>
+    </form>
+</body>
+</html>
