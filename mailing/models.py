@@ -1,8 +1,6 @@
-from django.utils import timezone
-
-from django.db import models
-
 from django.core.mail import send_mail
+from django.db import models
+from django.utils import timezone
 
 from config import settings
 
@@ -45,12 +43,12 @@ class Mailing(models.Model):
     message = models.ForeignKey(Message, on_delete=models.CASCADE)
     recipients = models.ManyToManyField(Recipient)
     name = models.CharField(max_length=255, null=True, blank=True)
-    #добавляем поле владельца
+    # добавляем поле владельца
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name='mailings',
-        default=1
+        related_name="mailings",
+        default=1,
     )
 
     def __str__(self):
@@ -62,7 +60,7 @@ class Mailing(models.Model):
 
     def send_emails(self):
         # Обновляем статус перед отправкой
-        self.set_status('Запущена')
+        self.set_status("Запущена")
         success_count = 0
         failure_count = 0
         for recipient in self.recipients.all():
@@ -71,7 +69,7 @@ class Mailing(models.Model):
                 send_mail(
                     subject=self.message.subject,
                     message=self.message.body,
-                    from_email='evgeniya.avk@yandex.ru',
+                    from_email="evgeniya.avk@yandex.ru",
                     recipient_list=[recipient.email],
                 )
                 # Логируем успешную попытку
@@ -79,8 +77,8 @@ class Mailing(models.Model):
                     mailing=self,
                     recipient=recipient.email,
                     attempt_time=timezone.now(),
-                    server_response='Письмо успешно отправлено',
-                    status='Успешно'
+                    server_response="Письмо успешно отправлено",
+                    status="Успешно",
                 )
                 success_count += 1
             except Exception as e:
@@ -90,11 +88,11 @@ class Mailing(models.Model):
                     recipient=recipient.email,
                     attempt_time=timezone.now(),
                     server_response=str(e),
-                    status='Не успешно'
+                    status="Не успешно",
                 )
                 failure_count += 1
         # Обновляем статус после завершения
-        self.set_status('Завершена')
+        self.set_status("Завершена")
 
     class Meta:
         verbose_name = "Рассылка"
@@ -110,7 +108,9 @@ class SendAttempt(models.Model):
     attempt_time = models.DateTimeField(default=timezone.now)
     status = models.CharField(max_length=50, null=True, blank=True)
     server_response = models.CharField(max_length=255, null=True, blank=True)
-    mailing = models.ForeignKey("Mailing", on_delete=models.CASCADE, null=True, blank=True)
+    mailing = models.ForeignKey(
+        "Mailing", on_delete=models.CASCADE, null=True, blank=True
+    )
     recipient = models.EmailField(max_length=254)
 
     class Meta:
