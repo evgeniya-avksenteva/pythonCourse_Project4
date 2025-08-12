@@ -4,7 +4,8 @@ from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
-from .models import Mailing, Recipient, SendAttempt
+from .models import Mailing, Recipient, SendingAttempt
+
 
 
 def index(request):
@@ -63,7 +64,7 @@ def run_mailing(request, pk):
 
 def mailing_attempts(request, pk):
     mailing = get_object_or_404(Mailing, pk=pk)
-    attempts = SendAttempt.objects.filter(mailing=mailing).order_by("-datetime_attempt")
+    attempts = SendingAttempt.objects.filter(mailing=mailing).order_by("-datetime_attempt")
     return render(
         request, "mailings/attempts.html", {"mailing": mailing, "attempts": attempts}
     )

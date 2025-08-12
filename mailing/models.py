@@ -58,40 +58,36 @@ class Mailing(models.Model):
         self.status = new_status
         self.save()
 
+
     def send_emails(self):
-        # Обновляем статус перед отправкой
         self.set_status("Запущена")
         success_count = 0
         failure_count = 0
         for recipient in self.recipients.all():
             try:
-                # Отправка письма
                 send_mail(
                     subject=self.message.subject,
                     message=self.message.body,
                     from_email="evgeniya.avk@yandex.ru",
                     recipient_list=[recipient.email],
                 )
-                # Логируем успешную попытку
-                SendAttempt.objects.create(
+                SendingAttempt.objects.create(
                     mailing=self,
                     recipient=recipient.email,
                     attempt_time=timezone.now(),
                     server_response="Письмо успешно отправлено",
-                    status="Успешно",
+                    success=True,
                 )
                 success_count += 1
             except Exception as e:
-                # Логируем ошибку
-                SendAttempt.objects.create(
+                SendingAttempt.objects.create(
                     mailing=self,
                     recipient=recipient.email,
                     attempt_time=timezone.now(),
                     server_response=str(e),
-                    status="Не успешно",
+                    success=False,
                 )
                 failure_count += 1
-        # Обновляем статус после завершения
         self.set_status("Завершена")
 
     class Meta:
@@ -99,18 +95,11 @@ class Mailing(models.Model):
         verbose_name_plural = "Рассылки"
 
 
-class SendAttempt(models.Model):
-    STATUS_CHOICES = [
-        ("Успешно", "Успешно"),
-        ("Не успешно", "Не успешно"),
-    ]
-
+class SendingAttempt(models.Model):
     attempt_time = models.DateTimeField(default=timezone.now)
-    status = models.CharField(max_length=50, null=True, blank=True)
+    success = models.BooleanField()
     server_response = models.CharField(max_length=255, null=True, blank=True)
-    mailing = models.ForeignKey(
-        "Mailing", on_delete=models.CASCADE, null=True, blank=True
-    )
+    mailing = models.ForeignKey("Mailing", on_delete=models.CASCADE, null=True, blank=True)
     recipient = models.EmailField(max_length=254)
 
     class Meta:

@@ -1,3 +1,6 @@
+{% extends 'mailing/base.html' %}
+{% block content %}
+
 <!DOCTYPE html>
 <h2>Статистика рассылок</h2>
 <ul>
@@ -5,3 +8,4 @@
   <li>Успешных: {{ stats.success_count }}</li>
   <li>Неуспешных: {{ stats.failure_count }}</li>
 </ul>
+{% endblock %}

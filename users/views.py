@@ -2,6 +2,9 @@ from django.contrib.auth import login
 from django.db.models import Count, Q
 from django.shortcuts import redirect, render
 
+from mailing.models import SendingAttempt
+
+
 from .forms import RegisterForm
 
 
@@ -14,7 +17,7 @@ def register(request):
             return redirect("home")  # перенаправление на главную страницу или dashboard
     else:
         form = RegisterForm()
-    return render(request, "register.html", {"form": form})
+    return render(request, "users/register.html", {"form": form})
 
 
 def user_statistics(request):
@@ -23,4 +26,11 @@ def user_statistics(request):
         success_count=Count("id", filter=Q(success=True)),
         failure_count=Count("id", filter=Q(success=False)),
     )
-    return render(request, "statistics.html", {"stats": attempts})
+    return render(request, "users/statistics.html", {"stats": attempts})
+
+
+
+
+def home(request):
+    return render(request, "users/home.html")
+

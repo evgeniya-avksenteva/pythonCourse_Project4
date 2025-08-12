@@ -4,6 +4,9 @@ from . import views
 from .views import (RecipientCreateView, RecipientDeleteView,
                     RecipientListView, RecipientUpdateView, index)
 
+
+app_name = 'mailings'
+
 urlpatterns = [
     path("", index, name="index"),
     path("recipients/", RecipientListView.as_view(), name="recipient_list"),
