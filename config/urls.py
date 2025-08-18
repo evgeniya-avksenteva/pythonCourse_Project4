@@ -1,9 +1,11 @@
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import path, include
 
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", include(("mailing.urls", "mailings"), namespace="mailings")),
-    path("users/", include(("users.urls", "users"), namespace="users")),
+    path("accounts/", include("django.contrib.auth.urls")),
+    path("mailings/", include("mailings.urls", namespace="mailings")),
+    path("newsletters/", include("newsletters.urls", namespace="newsletters")),
+    path("", include(("users.urls", "users"), namespace="users")),
 ]
