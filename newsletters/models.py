@@ -1,5 +1,4 @@
 from django.conf import settings
-
 from django.db import models
 from django.utils import timezone
 
@@ -17,7 +16,7 @@ class Newsletter(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="newsletters",
-        verbose_name="Автор"
+        verbose_name="Автор",
     )
     start_datetime = models.DateTimeField(
         verbose_name="Дата и время первой отправки",

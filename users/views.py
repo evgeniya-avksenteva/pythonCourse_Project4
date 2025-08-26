@@ -1,13 +1,13 @@
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm
-
 from django.core.mail import send_mail
-
 from django.shortcuts import redirect, render
 from django.urls import reverse
 
-from mailings.models import MailingRecipient
-from users.forms import CustomUserRegistrationForm
+from django.contrib.auth.decorators import login_required
+
+from django.http import HttpResponseForbidden
+from users.forms import CustomUserRegistrationForm, EditProfileForm
 from users.models import EmailConfirmation
 
 
@@ -78,6 +78,20 @@ def user_logout(request):
 
 def user_profile(request):
     return render(request, "users/profile.html")
+
+@login_required
+def edit_profile(request):
+    if not request.user.is_authenticated:
+        return HttpResponseForbidden("Вы должны войти в систему.")
+    # остальной код
+    if request.method == 'POST':
+        form = EditProfileForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('users:profile')
+    else:
+        form = EditProfileForm(instance=request.user)
+    return render(request, 'users/edit_profile.html', {'form': form})
 
 
 def home(request):

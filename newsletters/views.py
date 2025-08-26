@@ -14,7 +14,6 @@ from newsletters.models import MailingAttempt, Newsletter
 from .services.send_newsletter_email import \
     send_newsletter_email  # импорт функции отправки
 
-
 load_dotenv()
 
 
@@ -28,7 +27,7 @@ def mailing_statistics(request, pk):
     failure_count = attempts.filter(status="failure").count()
 
     context = {
-        "mailing": mailing,
+        "mailings": mailing,
         "total_attempts": total_attempts,
         "success_count": success_count,
         "failure_count": failure_count,

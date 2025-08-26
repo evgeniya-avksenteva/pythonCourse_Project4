@@ -30,7 +30,7 @@ class Migration(migrations.Migration):
             model_name="newsletter",
             name="message",
             field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE, to="mailings.mailing"
+                on_delete=django.db.models.deletion.CASCADE, to="mailings.mailings"
             ),
         ),
         migrations.AddField(
@@ -40,7 +40,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name="mailingattempt",
-            name="mailing",
+            name="mailings",
             field=models.ForeignKey(
                 on_delete=django.db.models.deletion.CASCADE,
                 related_name="attempts",

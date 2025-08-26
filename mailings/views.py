@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
+from django.db.models import Count, Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
@@ -12,7 +13,6 @@ from mailings.models import Mailing, MailingRecipient
 from mailings.utils import send_mailing
 from newsletters.models import Newsletter
 
-from django.db.models import Count, Q
 
 # Получение статистики по пользователю
 @login_required
@@ -20,9 +20,13 @@ def recipients_stats_view(request):
     recipients_stats = MailingRecipient.objects.annotate(
         total_messages=Count("messages_sent"),
         success_count=Count("messages_sent", filter=Q(messages_sent__status="success")),
-        failed_count=Count("messages_sent", filter=Q(messages_sent__status="failed"))
+        failed_count=Count("messages_sent", filter=Q(messages_sent__status="failed")),
     )
-    return render(request, "mailings/recipients_stats.html", {"recipients_stats": recipients_stats})
+    return render(
+        request,
+        "mailings/recipients_stats.html",
+        {"recipients_stats": recipients_stats},
+    )
 
 
 class MailingAccessMixin:
@@ -89,14 +93,18 @@ class MailingCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class MailingUpdateView(LoginRequiredMixin, MailingAccessMixin, MailingOwnerPermissionMixin, UpdateView):
+class MailingUpdateView(
+    LoginRequiredMixin, MailingAccessMixin, MailingOwnerPermissionMixin, UpdateView
+):
     model = Mailing
     template_name = "mailings/mailings_form.html"
     fields = ["title", "content"]
     success_url = reverse_lazy("mailings:mailings_list")
 
 
-class MailingDeleteView(LoginRequiredMixin, MailingAccessMixin, MailingOwnerPermissionMixin, DeleteView):
+class MailingDeleteView(
+    LoginRequiredMixin, MailingAccessMixin, MailingOwnerPermissionMixin, DeleteView
+):
     model = Mailing
     template_name = "mailings/mailings_confirm_delete.html"
     success_url = reverse_lazy("mailings:mailings_list")
@@ -114,7 +122,9 @@ class MailingRecipientListView(LoginRequiredMixin, ListView):
         return MailingRecipient.objects.filter(owner=user)
 
 
-class MailingRecipientDetailView(LoginRequiredMixin, MailingOwnerPermissionMixin, DetailView):
+class MailingRecipientDetailView(
+    LoginRequiredMixin, MailingOwnerPermissionMixin, DetailView
+):
     model = MailingRecipient
     template_name = "mailings/recipients_detail.html"
 
@@ -136,14 +146,18 @@ class MailingRecipientCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class MailingRecipientUpdateView(LoginRequiredMixin, MailingOwnerPermissionMixin, UpdateView):
+class MailingRecipientUpdateView(
+    LoginRequiredMixin, MailingOwnerPermissionMixin, UpdateView
+):
     model = MailingRecipient
     template_name = "mailings/recipients_form.html"
     form_class = MailingRecipientForm
     success_url = reverse_lazy("mailings:recipients_list")
 
 
-class MailingRecipientDeleteView(LoginRequiredMixin, MailingOwnerPermissionMixin, DeleteView):
+class MailingRecipientDeleteView(
+    LoginRequiredMixin, MailingOwnerPermissionMixin, DeleteView
+):
     model = MailingRecipient
     template_name = "mailings/recipients_confirm_delete.html"
     success_url = reverse_lazy("mailings:recipients_list")

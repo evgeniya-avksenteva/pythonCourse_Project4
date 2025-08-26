@@ -1,5 +1,7 @@
 from django import forms
+
 from mailings.models import MailingRecipient
+
 
 class MailingRecipientForm(forms.ModelForm):
     class Meta:

@@ -1,8 +1,8 @@
+import uuid
+
 from django.conf import settings
 from django.db import models
-
 from django.urls import reverse
-import uuid
 
 
 class Mailing(models.Model):
@@ -16,7 +16,7 @@ class Mailing(models.Model):
     is_active = models.BooleanField(default=True)
 
     def get_absolute_url(self):
-        return reverse('mailings:mailings_detail', args=[str(self.pk)])
+        return reverse("mailings:mailings_detail", args=[str(self.pk)])
 
     class Meta:
         verbose_name = "Сообщение"
@@ -30,14 +30,20 @@ class Mailing(models.Model):
 
 
 class MailingRecipient(models.Model):
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='recipients')
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="recipients"
+    )
     email = models.EmailField(unique=True, verbose_name="Email")
-    full_name = models.CharField(max_length=100, verbose_name="Ф.И.О.", help_text="Введите свое Ф.И.О.")
-    comment = models.TextField(verbose_name="Комментарий", help_text="Введите свой комментарий")
+    full_name = models.CharField(
+        max_length=100, verbose_name="Ф.И.О.", help_text="Введите свое Ф.И.О."
+    )
+    comment = models.TextField(
+        verbose_name="Комментарий", help_text="Введите свой комментарий"
+    )
     token = models.CharField(max_length=100, blank=True, null=True, default=uuid.uuid4)
 
     def get_absolute_url(self):
-        return reverse('mailings:recipients_detail', args=[str(self.pk)])
+        return reverse("mailings:recipients_detail", args=[str(self.pk)])
 
     class Meta:
         verbose_name = "Получатель рассылки"

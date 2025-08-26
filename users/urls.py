@@ -1,7 +1,8 @@
 from django.contrib.auth import views as auth_views
 from django.urls import path, reverse_lazy
-from .apps import UsersConfig
+
 from . import views
+from .apps import UsersConfig
 from .views import confirm_email
 
 app_name = UsersConfig.name
@@ -12,9 +13,11 @@ urlpatterns = [
     path("login/", views.user_login, name="login"),
     path("logout/", views.user_logout, name="logout"),
     path("profile/", views.user_profile, name="profile"),
-    path("registration_pending/", views.registration_pending, name="registration_pending"),
+    path('profile/edit/', views.edit_profile, name='profile_edit'),
+    path(
+        "registration_pending/", views.registration_pending, name="registration_pending"
+    ),
     path("confirm/<uuid:token>/", confirm_email, name="confirm_email"),
-
     # Восстановление пароля
     path(
         "password_reset/",

@@ -107,4 +107,3 @@ class CustomUserAdmin(UserAdmin):
 
 # Регистрируем кастомного пользователя с кастомным админом
 admin.site.register(CustomUser, CustomUserAdmin)
-

@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AddField(
-            model_name="mailing",
+            model_name="mailings",
             name="owner",
             field=models.ForeignKey(
                 on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL
@@ -33,11 +33,11 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name="messagelog",
-            name="mailing",
+            name="mailings",
             field=models.ForeignKey(
                 on_delete=django.db.models.deletion.CASCADE,
                 related_name="messages",
-                to="mailings.mailing",
+                to="mailings.mailings",
             ),
         ),
         migrations.AddField(
