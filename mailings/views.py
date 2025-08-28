@@ -13,6 +13,8 @@ from mailings.models import Mailing, MailingRecipient
 from mailings.utils import send_mailing
 from newsletters.models import Newsletter
 
+from django.http import HttpResponse
+
 
 # Получение статистики по пользователю
 @login_required
@@ -106,7 +108,7 @@ class MailingDeleteView(
     LoginRequiredMixin, MailingAccessMixin, MailingOwnerPermissionMixin, DeleteView
 ):
     model = Mailing
-    template_name = "mailings/mailings_confirm_delete.html"
+    template_name = "mailings/recipient_confirm_delete.html"
     success_url = reverse_lazy("mailings:mailings_list")
 
 
@@ -138,7 +140,7 @@ class MailingRecipientDetailView(
 class MailingRecipientCreateView(LoginRequiredMixin, CreateView):
     model = MailingRecipient
     form_class = MailingRecipientForm
-    template_name = "mailings/recipients_form.html"
+    template_name = "mailings/recipient_form.html"
     success_url = reverse_lazy("mailings:recipients_list")
 
     def form_valid(self, form):
@@ -150,7 +152,7 @@ class MailingRecipientUpdateView(
     LoginRequiredMixin, MailingOwnerPermissionMixin, UpdateView
 ):
     model = MailingRecipient
-    template_name = "mailings/recipients_form.html"
+    template_name = "mailings/recipient_form.html"
     form_class = MailingRecipientForm
     success_url = reverse_lazy("mailings:recipients_list")
 
@@ -159,5 +161,7 @@ class MailingRecipientDeleteView(
     LoginRequiredMixin, MailingOwnerPermissionMixin, DeleteView
 ):
     model = MailingRecipient
-    template_name = "mailings/recipients_confirm_delete.html"
+    template_name = "mailings/recipient_confirm_delete.html"
     success_url = reverse_lazy("mailings:recipients_list")
+
+
