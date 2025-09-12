@@ -11,6 +11,10 @@ psycopg2-binary = "^2.9.10"
 django = "^5.2.4"
 python-dotenv = "^1.1.1"
 pillow = "^11.3.0"
+django-redis = "^6.0.0"
+celery = "^5.5.3"
+redis = "^6.4.0"
+django-celery-beat = "^2.8.1"
 
 
 [tool.poetry.group.lint.dependencies]

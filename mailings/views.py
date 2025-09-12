@@ -12,12 +12,14 @@ from mailings.forms import MailingRecipientForm
 from mailings.models import Mailing, MailingRecipient
 from mailings.utils import send_mailing
 from newsletters.models import Newsletter
-
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
 from django.http import HttpResponse
 
 
 # Получение статистики по пользователю
 @login_required
+@cache_page(60 * 15)  # кешируем на 15 минут
 def recipients_stats_view(request):
     recipients_stats = MailingRecipient.objects.annotate(
         total_messages=Count("messages_sent"),
@@ -73,6 +75,7 @@ def mailings_view(request):
     return render(request, "mailings/mailings_page.html", {"messages": messages})
 
 
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class MailingListView(LoginRequiredMixin, MailingAccessMixin, ListView):
     model = Mailing
     template_name = "mailings/mailings_list.html"
