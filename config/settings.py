@@ -1,5 +1,6 @@
-from pathlib import Path
 import os
+from pathlib import Path
+
 from dotenv import load_dotenv
 
 load_dotenv(override=True)
@@ -22,8 +23,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "mailing",
+    "mailings",
     "users",
+    "newsletters",
 ]
 
 MIDDLEWARE = [
@@ -105,10 +107,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # AUTH_USER_MODEL = 'users.User'
 
-LOGIN_URL = '/'
+LOGIN_URL = "/"
 
-LOGIN_REDIRECT_URL = '/'
-LOGAUT_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = "/"
+LOGAUT_REDIRECT_URL = "/"
 
 EMAIL_HOST = os.getenv("EMAIL_HOST")
 EMAIL_PORT = os.getenv("EMAIL_PORT")
@@ -120,6 +122,16 @@ EMAIL_USE_SSL = True
 SERVER_EMAIL = EMAIL_HOST_USER
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
-AUTH_USER_MODEL='users.CustomUser'
+AUTH_USER_MODEL = "users.CustomUser"
+
+
+CACHE_ENABLED = True
+if CACHE_ENABLED:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.redis.RedisCache",
+            "LOCATION": "redis://localhost:6379",
+        }
+    }
